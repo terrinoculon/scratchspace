@@ -1,43 +1,59 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-	
+<html>
+
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<script type="text/javascript" src="./libgif.js"></script>
-		<script type="text/javascript" src="./rubbable.js"></script>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 		<title>
-			Example gif
+			Scratch
 		</title>
 	</head>
-	
+
 	<body>
 		<center>
-			<h1>Example with controls and no auto-play</h1>
-			<img id="example1" src="./example_gifs/rub_test_preview.jpg" rel:animated_src="./example_gifs/rub_test.gif" rel:auto_play="0" width="467" height="375" />
+			<img name="example1" src="./example_gifs/1.jpg" width="30%" height="20%"/>
 			<br>
-			<script type="text/javascript">
-				var sup1 = new SuperGif({ gif: document.getElementById('example1') } );
-				sup1.load();
-			</script>
-			<a href="javascript:;" onmousedown="sup1.pause(); return false;">Pause</a> |
-			<a href="javascript:;" onmousedown="sup1.play(); return false;">Play</a> | 
-			<a href="javascript:;" onmousedown="sup1.move_to(0); return false;">Restart</a> |
-			<a href="javascript:;" onmousedown="sup1.move_relative(1); return false;">Step forward</a> |
-			<a href="javascript:;" onmousedown="sup1.move_relative(-1); return false;">Step back</a>
-
-			<h1>Example with rubbing and auto-play on</h1>
-			<img id="example2" src="./example_gifs/rub_test.gif" rel:auto_play="1" width="467" height="375" rel:rubbable="1" />
 			<br>
-			<script type="text/javascript">
-				var sup2 = new RubbableGif({ gif: document.getElementById('example2') } );
-				sup2.load();
-			</script>
+			<canvas height="250" id="imgCanvas" width="250"></canvas>
 
-			<br><br>
-			<p>Image via <a href="http://mlkshk.com/p/IP08">mlkshk</a></p>
 		</center>
+		<script language="JavaScript" type="text/javascript">
 
+
+		var canvas = document.getElementById("imgCanvas");
+		canvas.width=250;
+		canvas.height=250;
+		mr=50;
+		mc=50;
+		var posX;
+		var posY;
+		var context = canvas.getContext('2d');
+		canvas.addEventListener('mousemove',getMousePos, true);
+		function createImageOnCanvas(imageId) {}
+		var ct;
+		function getMousePos( evt) {
+			var rect = canvas.getBoundingClientRect();
+			posX= (evt.clientX-rect.left)/(rect.right-rect.left)*canvas.width;
+		  posY= (evt.clientY-rect.top)/(rect.bottom-rect.top)*canvas.height;
+		  posx = Math.ceil((posX+1)/5);
+			posy = Math.ceil((posY+1)/5);
+				// Erase canvas
+				// Erase canvas
+				context.fillStyle = "#666666";
+				context.fillRect(0, 0, canvas.width, canvas.height);
+				// Draw a circle particle on the canvas
+				context.beginPath();
+				context.fillStyle = "#E59420";
+				// After setting the fill style, draw an arc on the canvas
+				context.arc(posX, posY, 10, 0, Math.PI * 2, true);
+				context.closePath();context.fill();
+		    ct= (posy + mr * (posx - 1)) ;
+				if (ct>1000)
+				{
+				document.example1.src="./example_gifs/0.jpg";
+				}
+				else {
+				document.example1.src="./example_gifs/1.jpg";
+				}
+		}
+			</script>
 	</body>
 
 </html>
