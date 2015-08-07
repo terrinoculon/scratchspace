@@ -8,7 +8,7 @@
 
 	<body>
 		<center>
-			<img name="example1" src="./example_gifs/1.jpg" width="30%" height="20%"/>
+			<img name="example1" src="./example_gifs/1.jpg" width="60%"/>
 			<br>
 			<br>
 			<canvas height="250" id="imgCanvas" width="250"></canvas>
@@ -22,8 +22,8 @@
 		canvas.height=250;
 		mr=50;
 		mc=50;
-		var posX;
-		var posY;
+		var posX; var base="./frames_for_demo/frame";
+		var posY;var idx=1;
 		var context = canvas.getContext('2d');
 		canvas.addEventListener('mousemove',getMousePos, true);
 		function createImageOnCanvas(imageId) {}
@@ -45,13 +45,9 @@
 				context.arc(posX, posY, 10, 0, Math.PI * 2, true);
 				context.closePath();context.fill();
 		    ct= (posy + mr * (posx - 1)) ;
-				if (ct>1000)
-				{
-				document.example1.src="./example_gifs/0.jpg";
-				}
-				else {
-				document.example1.src="./example_gifs/1.jpg";
-				}
+
+
+				document.example1.src=base.concat(ct.toString(),".png");
 		}
 			</script>
 	</body>
