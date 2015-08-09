@@ -8,7 +8,7 @@
 
 	<body>
 		<center>
-			<img name="example1" src="./example_gifs/1.jpg" width="60%"/>
+			<img name="example1" src="./frames_for_demo/frame32.png" width="60%"/>
 			<br>
 			<br>
 			<canvas height="250" id="imgCanvas" width="250"></canvas>
@@ -22,7 +22,7 @@
 		// 		 var ii=i/25;
 		//
 		//   }
-
+		var list=[];
 		var canvas = document.getElementById("imgCanvas");
 		canvas.width=250;
 		canvas.height=250;
@@ -32,7 +32,10 @@
 		var posY;var idx=1;
 		var context = canvas.getContext('2d');
 		canvas.addEventListener('mousemove',getMousePos, true);
+
 		function createImageOnCanvas(imageId) {}
+		context.fillStyle = "#666666";
+		context.fillRect(0, 0, canvas.width, canvas.height);
 		var ct;
 		function getMousePos( evt) {
 			var rect = canvas.getBoundingClientRect();
@@ -51,9 +54,28 @@
 				context.arc(posX, posY, 10, 0, Math.PI * 2, true);
 				context.closePath();context.fill();
 		    ct= (posy + mr * (posx - 1)) ;
-
-
+				if (list.indexOf(ct)==-1)
+				{
+					list.push(ct);
+				}
 				document.example1.src=base.concat(ct.toString(),".png");
+				var bufferSize=1;
+				for (var i=-bufferSize;i<bufferSize;i++)
+				{
+					for (var j=-bufferSize;j<bufferSize;j++)
+					{
+						var tmp= (posy+j + mr * (posx+i - 1)) ;
+						if ((list.indexOf(tmp)==-1) && (tmp<2501) && (tmp>0) )
+						{
+							list.push(tmp);
+							var img = new Image();
+							img.src = base.concat(tmp.toString(),".png");
+						}
+					}
+
+				}
+
+
 		}
 			</script>
 	</body>
