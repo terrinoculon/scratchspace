@@ -4,10 +4,10 @@ var base="http://terrinoculon.github.io/scratchspace/frames_for_demo/frame";
     var url = base.concat(i.toString(),".png");
     var xhr = new XMLHttpRequest();
      xhr.responseType = 'blob';
-     xhr.onload = xhr.onerror = onload;
+    // xhr.onload = xhr.onerror = onload;
      xhr.open('GET', url, true);
      xhr.send();
-       
+
 
   		 var ii=i/25;
 
