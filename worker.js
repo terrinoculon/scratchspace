@@ -1,4 +1,4 @@
-function(e) {
+function e() {
 var base="./frames_for_demo/frame";
   for (var i = 0; i < 2500; ++i) {
        var img = new Image();
