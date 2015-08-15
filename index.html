@@ -38,7 +38,7 @@
 		function createImageOnCanvas(imageId) {}
 		context.fillStyle = "#666666";
 		context.fillRect(0, 0, canvas.width, canvas.height);
-		var ct;
+		ct=32;
 		function getMousePos( evt) {
 			var rect = canvas.getBoundingClientRect();
 			posX= (evt.clientX-rect.left)/(rect.right-rect.left)*canvas.width;
@@ -79,12 +79,17 @@
 
 
 		}
-		
+		if (window.Worker) {
 			var myWorker = new Worker("worker.js");
+			console.log('Created Worker');
 			myWorker.onmessage = function(e) {
 				document.getElementById("result").innerHTML = e.data;
 				console.log('Message received from worker');
-	};
+	};}
+	else{
+		document.getElementById("result").innerHTML = 'Failed';
+		console.log('No Workers');
+	}
 
 			</script>
 	</body>
