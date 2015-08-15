@@ -4,8 +4,8 @@ var base="./frames_for_demo/frame";
        var img = new Image();
        img.src = base.concat(i.toString(),".png");
   		 var ii=i/25;
-       var workerResult = ii.toString();
+
        console.log('Posting message back to main script');
-       postMessage(workerResult);
+       postMessage(ii);
     }
 }
