@@ -1,97 +1,181 @@
 <html>
+<head>
+	<title>
+		Scratch
+	</title>
 
-	<head>
-		<title>
-			Scratch
-		</title>
-	</head>
-
-	<body  bgcolor="#333">
-
-		<center>
-			<img name="example1" src="./frames_for_demo/frame32.jpg" width="60%"/>
-			<br>
-			<br>
-			<canvas height="250" id="imgCanvas" width="250"></canvas>
-<br>
-<p>Idle Download : <output id="result"></output> % complete.. </p>
-		</center>
-		<script language="JavaScript" type="text/javascript">
-		var base="http://terrinoculon.github.io/scratchspace/frames_for_demo/frame";
-		// for (var i = 0; i < 2500; ++i) {
-		//      var img = new Image();
-		//      img.src = base.concat(i.toString(),".png");
-		// 		 var ii=i/25;
-		//
-		//   }
-		var list=[];
-		var canvas = document.getElementById("imgCanvas");
-		canvas.width=250;
-		canvas.height=250;
-		mr=50;
-		mc=50;
-		var posX;
-		var posY;var idx=1;
-		var context = canvas.getContext('2d');
-		canvas.addEventListener('mousemove',getMousePos, true);
-
-		function createImageOnCanvas(imageId) {}
-		context.fillStyle = "#666666";
-		context.fillRect(0, 0, canvas.width, canvas.height);
-		ct=32;
-		function getMousePos( evt) {
-			var rect = canvas.getBoundingClientRect();
-			posX= (evt.clientX-rect.left)/(rect.right-rect.left)*canvas.width;
-		  posY= (evt.clientY-rect.top)/(rect.bottom-rect.top)*canvas.height;
-		  posx = Math.ceil((posX+1)/5);
-			posy = Math.ceil((posY+1)/5);
-				// Erase canvas
-				// Erase canvas
-				context.fillStyle = "#666666";
-				context.fillRect(0, 0, canvas.width, canvas.height);
-				// Draw a circle particle on the canvas
-				context.beginPath();
-				context.fillStyle = "#E59420";
-				// After setting the fill style, draw an arc on the canvas
-				context.arc(posX, posY, 10, 0, Math.PI * 2, true);
-				context.closePath();context.fill();
-		    ct= (posy + mr * (posx - 1)) ;
-				if (list.indexOf(ct)==-1)
-				{
-					list.push(ct);
-				}
-				document.example1.src=base.concat(ct.toString(),".jpg");
-				var bufferSize=0;
-				for (var i=-bufferSize;i<bufferSize;i++)
-				{
-					for (var j=-bufferSize;j<bufferSize;j++)
-					{
-						var tmp= (posy+j + mr * (posx+i - 1)) ;
-						if ((list.indexOf(tmp)==-1) && (tmp<2501) && (tmp>0) )
-						{
-							list.push(tmp);
-							var img = new Image();
-							img.src = base.concat(tmp.toString(),".jpg");
-						}
-					}
-
-				}
-
-
-		}
-		if (window.Worker) {
-			var myWorker = new Worker("worker.js");
-			console.log('Created Worker');
-			myWorker.onmessage = function(e) {
-				document.getElementById("result").innerHTML = e.data;
-				console.log('Message received from worker');
-	};}
-	else{
-		document.getElementById("result").innerHTML = 'Failed';
-		console.log('No Workers');
+	<style type="text/css">
+	.myradio{
+		text-align : left;
+		margin-left:40%;
+	}
+	.myradio input[type=radio   ]:not(old){
+		width     : 2em;
+		margin    : 0;
+		padding   : 0;
+		font-size : 1em;
+		opacity   : 0;
+	}
+	.myradio input[type=radio   ]:not(old) + label{
+		display      : inline-block;
+		margin-left  : -2em;
+		line-height  : 1.5em;
 	}
 
-			</script>
+	.myradio input[type=radio   ]:not(old) + label > span{
+		display          : inline-block;
+		width            : 0.875em;
+		height           : 0.875em;
+		margin           : 0.25em 0.5em 0.25em 0.25em;
+		border           : 0.0625em solid #222222;
+		border-radius    : 0.25em;
+		background       : #111111;
+		background-image :    -moz-linear-gradient(#222222,#111111);
+		background-image :     -ms-linear-gradient(#222222,#111111);
+		background-image :      -o-linear-gradient(#222222,#111111);
+		background-image : -webkit-linear-gradient(#222222,#111111);
+		background-image :         linear-gradient(#222222,#111111);
+		vertical-align   : bottom;
+	}
+	.myradio input[type=radio   ]:not(old):checked + label > span{
+		background-image :    -moz-linear-gradient(#111111,#222222);
+		background-image :     -ms-linear-gradient(#111111,#222222);
+		background-image :      -o-linear-gradient(#111111,#222222);
+		background-image : -webkit-linear-gradient(#111111,#222222);
+		background-image :         linear-gradient(#111111,#222222);
+	}
+	.myradio input[type=radio]:not(old):checked +  label > span > span{
+		display          : block;
+		width            : 0.5em;
+		height           : 0.5em;
+		margin           : 0.125em;
+		border           : 0.0625em solid rgb(115,153,77);
+		border-radius    : 0.125em;
+		background       : #E59420;
+		background-image :    -moz-linear-gradient(#E59420,#E59420);
+		background-image :     -ms-linear-gradient(#E59420,#E59420);
+		background-image :      -o-linear-gradient(#E59420,#E59420);
+		background-image : -webkit-linear-gradient(#E59420,#E59420);
+		background-image :         linear-gradient(#E59420,#E59420);
+	}
+
+
+	</style>
+</head>
+
+<body  bgcolor="#333">
+
+	<center>
+		<img name="example1" src="./frames_for_demo/frame32.jpg" width="60%"/>
+		<br>
+		<br>
+		<canvas height="250" id="imgCanvas" width="250"></canvas>
+		<br>
+		<div class="myradio">
+			<div>
+				<input id="mode1" type="radio" name="mode" value="1" checked="checked" onclick="modeChange()">
+				<label for="mode1"><span><span></span></span>Preloading Disabled</label>
+			</div>
+			<div>
+				<input id="mode2" type="radio" name="mode" value="2" onclick="modeChange()">
+				<label for="mode2"><span><span></span></span>Preloading along Trajectories</label>
+			</div>
+			<div>
+				<input id="mode3" type="radio" name="mode" value="3" onclick="modeChange()">
+				<label for="mode3"><span><span></span></span>Lazy Preloading</label>
+			</div>
+		</div>
+		<br>
+		<progress  id="progBar" value="0" max ="100" ></progress>
+	</center>
+	<script language="JavaScript" type="text/javascript">
+	var base="http://terrinoculon.github.io/scratchspace/frames_for_demo/frame";
+	var list=[];mode=1;
+	var canvas = document.getElementById("imgCanvas");
+	canvas.width=250;
+	canvas.height=250;
+	mr=50;
+	mc=50;
+	var context = canvas.getContext('2d');
+	canvas.addEventListener('mousemove',getMousePos, true);
+	function createImageOnCanvas(imageId) {}
+	context.fillStyle = "#666666";
+	context.fillRect(0, 0, canvas.width, canvas.height);
+	ct=32;
+ document.getElementById("progBar").style.display='none';
+	function getMousePos( evt) {
+		var rect = canvas.getBoundingClientRect();
+		posX= (evt.clientX-rect.left)/(rect.right-rect.left)*canvas.width;
+		posY= (evt.clientY-rect.top)/(rect.bottom-rect.top)*canvas.height;
+		posx = Math.ceil((posX+1)/5);
+		posy = Math.ceil((posY+1)/5);
+		drawCanvas();
+	}
+
+	function drawCanvas(){
+		if (mode==1)
+		{
+			draw();
+		}
+		else if (mode==2) {
+			drawWithTrajectory();
+		}
+		else if (mode==3) {
+			draw();
+		}
+	}
+
+	function draw(){
+		context.fillStyle = "#666666";
+		context.fillRect(0, 0, canvas.width, canvas.height);
+		context.beginPath();
+		context.fillStyle = "#E59420";
+		context.arc(posX, posY, 10, 0, Math.PI * 2, true);
+		context.closePath();context.fill();
+		ct= (posy + mr * (posx - 1)) ;
+		document.example1.src=base.concat(ct.toString(),".jpg");console.log(mode);
+	}
+
+	function drawWithTrajectory(){
+		context.fillStyle = "#666666";
+		context.fillRect(0, 0, canvas.width, canvas.height);
+		context.beginPath();
+		context.fillStyle = "#E59420";
+		context.arc(posX, posY, 10, 0, Math.PI * 2, true);
+		context.closePath();context.fill();
+		ct= (posy + mr * (posx - 1)) ;
+		document.example1.src=base.concat(ct.toString(),".jpg");
+		console.log(mode);
+	}
+	function modeChange(){
+		if (document.getElementById('mode1').checked) {
+			mode = document.getElementById('mode1').value;
+			document.getElementById("progBar").style.display='none';
+		}
+
+		if (document.getElementById('mode2').checked) {
+			mode = document.getElementById('mode2').value;
+			document.getElementById("progBar").style.display='none';
+		}
+		if (document.getElementById('mode3').checked) {
+			mode = document.getElementById('mode3').value;
+			document.getElementById("progBar").style.display='block';
+			if (window.Worker) {
+				var myWorker = new Worker("worker.js");
+				console.log('Created Worker');
+				myWorker.onmessage = function(e) {
+					document.getElementById("progBar").value = e.data;
+					console.log('Message received from worker');
+				};}
+				else{
+					document.getElementById("result").innerHTML = 'Failed';
+					console.log('No Workers');
+				}
+
+			}
+		}
+
+		</script>
 	</body>
 
-</html>
+	</html>
