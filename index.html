@@ -230,9 +230,11 @@
 			img.src=base.concat(tmp.toString(),".jpg");
 			document.getElementById("progBar").value = (i+1)/traj.length*100;
 		}
-		document.getElementById("playButtons").style.display='block';
-		document.getElementById("progBar").style.display='none';
-
+		if (i=(traj.length-1))
+		{
+			document.getElementById("playButtons").style.display='block';
+			document.getElementById("progBar").style.display='none';
+		}
 	}
 
 	function modeChange(){
