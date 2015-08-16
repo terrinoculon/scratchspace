@@ -9,7 +9,7 @@
 	<body  bgcolor="#333">
 
 		<center>
-			<img name="example1" src="./frames_for_demo/frame32.png" width="60%"/>
+			<img name="example1" src="./frames_for_demo/frame32.jpg" width="60%"/>
 			<br>
 			<br>
 			<canvas height="250" id="imgCanvas" width="250"></canvas>
@@ -60,7 +60,7 @@
 				{
 					list.push(ct);
 				}
-				document.example1.src=base.concat(ct.toString(),".png");
+				document.example1.src=base.concat(ct.toString(),".jpg");
 				var bufferSize=0;
 				for (var i=-bufferSize;i<bufferSize;i++)
 				{
@@ -71,7 +71,7 @@
 						{
 							list.push(tmp);
 							var img = new Image();
-							img.src = base.concat(tmp.toString(),".png");
+							img.src = base.concat(tmp.toString(),".jpg");
 						}
 					}
 
