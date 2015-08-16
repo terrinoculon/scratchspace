@@ -58,12 +58,64 @@
 		background-image : -webkit-linear-gradient(#E59420,#E59420);
 		background-image :         linear-gradient(#E59420,#E59420);
 	}
+	.play_border {
+		margin:5px;
+		border: 2px solid rgba(0,0,0,0.7);
+		-webkit-border-radius: 100%;
+		-moz-border-radius: 100%;
+		border-radius: 100%;
+		width: 40px;
+		height: 40px;
+		-webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+		-moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+		box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+		-webkit-transition: all 0.5s ease;
+		-moz-transition: all 0.5s ease;
+		-o-transition: all 0.5s ease;
+		-ms-transition: all 0.5s ease;
+		transition: all 0.5s ease;
+		cursor: pointer;
+		display: inline-block;
+	}
+	.play_border:hover{
+		border-color: transparent;
+		-webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+		-moz-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+		box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+	}
+	.play_border:hover .play_button{
+		border-left: 20px solid rgba(0,0,0,0.5);
+	}
+	.play_border:active,.play_border:focus{
+		-webkit-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+		-moz-box-shadow: 0px 0px 5.play_button:hoverpx 2px rgba(0, 0, 0, 0.2);
+		box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.2);
+	}
+	.play_button {
+		position:relative;
+		top: 10px;
+		width: 0;
+		height: 0;
+		border-top: 10px solid transparent;
+		border-bottom: 10px solid transparent;
+		border-left: 20px solid rgba(0,0,0,0.8);
+	}
 
+	.circle{
+		margin-left:0%;
+		margin-top:25%;
+		border-radius:50%;
+		width:50%;
+		height:50%;
+		display:block;
+		background-color: rgba(0,0,0,0.8);
+		border:0;
+	}
 
 	</style>
 </head>
 
-<body  bgcolor="#333">
+<body  bgcolor="#333"  onkeydown="keyDown(event);">
 
 	<center>
 		<img name="example1" src="./frames_for_demo/frame32.jpg" width="60%"/>
@@ -87,6 +139,16 @@
 		</div>
 		<br>
 		<progress  id="progBar" value="0" max ="100" ></progress>
+		<br>
+		<div id="playButtons" >
+			<div class="play_border" onclick="recordClicked()">
+				<div class="circle"></div>
+			</div>
+			<div class="play_border" onclick="playClicked()">
+				<div class="play_button"></div>
+			</div>
+
+		</div>
 	</center>
 	<script language="JavaScript" type="text/javascript">
 	var base="http://terrinoculon.github.io/scratchspace/frames_for_demo/frame";
@@ -102,7 +164,8 @@
 	context.fillStyle = "#666666";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	ct=32;
- document.getElementById("progBar").style.display='none';
+	document.getElementById("progBar").style.display='none';
+	document.getElementById("playButtons").style.display='none';
 	function getMousePos( evt) {
 		var rect = canvas.getBoundingClientRect();
 		posX= (evt.clientX-rect.left)/(rect.right-rect.left)*canvas.width;
@@ -133,19 +196,36 @@
 		context.arc(posX, posY, 10, 0, Math.PI * 2, true);
 		context.closePath();context.fill();
 		ct= (posy + mr * (posx - 1)) ;
-		document.example1.src=base.concat(ct.toString(),".jpg");console.log(mode);
+		document.example1.src=base.concat(ct.toString(),".jpg");console.log(ct);
 	}
 
 	function drawWithTrajectory(){
-		context.fillStyle = "#666666";
-		context.fillRect(0, 0, canvas.width, canvas.height);
+		if (record==false && play==false)
+		{
+			draw();
+		}
+		if (record==true)
+		{
+			recordTrajectory();
+		}
+	}
+	function recordTrajectory(){
 		context.beginPath();
 		context.fillStyle = "#E59420";
 		context.arc(posX, posY, 10, 0, Math.PI * 2, true);
 		context.closePath();context.fill();
 		ct= (posy + mr * (posx - 1)) ;
-		document.example1.src=base.concat(ct.toString(),".jpg");
-		console.log(mode);
+		traj.push(ct);
+		pX.push(posX);
+		pY.push(posY);
+	}
+	function loadTrajectory(){
+		for (var i=0;i<traj.length;i++)
+		{
+			var tmp=traj[i];
+			var img= new Image();
+			img.src=base.concat(tmp.toString(),".jpg");
+		}
 	}
 	function modeChange(){
 		if (document.getElementById('mode1').checked) {
@@ -156,6 +236,9 @@
 		if (document.getElementById('mode2').checked) {
 			mode = document.getElementById('mode2').value;
 			document.getElementById("progBar").style.display='none';
+			document.getElementById("playButtons").style.display='block';
+			record=false;
+			play=false;
 		}
 		if (document.getElementById('mode3').checked) {
 			mode = document.getElementById('mode3').value;
@@ -173,6 +256,52 @@
 				}
 
 			}
+		}
+		function keyDown(e) {
+		     if (e.keyCode == 13 && mode==2) {
+		          record=true;
+							traj=[];
+							pX=[];
+							pY=[];context.fillStyle = "#666666";
+							context.fillRect(0, 0, canvas.width, canvas.height);
+		     }if (e.keyCode == 32 && mode==2) {
+		          record=false;
+							loadTrajectory();
+							console.log(traj.length);
+		     }
+		}
+		function playClicked(){
+			context.fillStyle = "#666666";
+			context.fillRect(0, 0, canvas.width, canvas.height);
+			var i=0;
+			setInterval(
+				function(){
+					if (i<traj.length)
+					{
+						ct=traj[i];
+						posX=pX[i];
+						posY=pY[i];
+						playDraw();
+						i++;
+					}
+					else {
+						clearInterval();
+					}
+				},100);
+		}
+		function recordClicked(){
+			record=true;
+			traj=[];
+			pX=[];
+			pY=[];context.fillStyle = "#666666";
+			context.fillRect(0, 0, canvas.width, canvas.height);
+		}
+		function playDraw(){
+			context.beginPath();
+			context.fillStyle = "#E59420";
+			context.arc(posX, posY, 10, 0, Math.PI * 2, true);
+			context.closePath();context.fill();
+			document.example1.src=base.concat(ct.toString(),".jpg");console.log(ct);
 		}
 
 		</script>
