@@ -220,13 +220,21 @@
 		pY.push(posY);
 	}
 	function loadTrajectory(){
+
+		document.getElementById("playButtons").style.display='none';
+		document.getElementById("progBar").style.display='block';
 		for (var i=0;i<traj.length;i++)
 		{
 			var tmp=traj[i];
 			var img= new Image();
 			img.src=base.concat(tmp.toString(),".jpg");
+			document.getElementById("progBar").value = (i+1)/traj.length*100;
 		}
+		document.getElementById("playButtons").style.display='block';
+		document.getElementById("progBar").style.display='none';
+
 	}
+
 	function modeChange(){
 		if (document.getElementById('mode1').checked) {
 			mode = document.getElementById('mode1').value;
@@ -287,7 +295,7 @@
 					else {
 						clearInterval();
 					}
-				},100);
+				},50);
 		}
 		function recordClicked(){
 			record=true;
