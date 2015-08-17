@@ -1,5 +1,5 @@
 function e() {
-var base="http://terrinoculon.github.io/scratchspace/frames_for_demo/frame";
+var base="https://raw.githubusercontent.com/terrinoculon/toys/master/frame";
   for (var i = 1; i < 2501; i++) {
     var url = base.concat(i.toString(),".jpg");
     var xhr = new XMLHttpRequest();
